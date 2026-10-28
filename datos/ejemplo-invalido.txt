@@ -1,0 +1,5 @@
+# Archivo con error intencional (criterio 3): costo -1 en la línea 5
+SEDE;A;Sede A
+SEDE;B;Sede B
+CONEXION;A;B;4
+CONEXION;B;A;-1

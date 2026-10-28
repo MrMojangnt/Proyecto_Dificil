@@ -1,0 +1,12 @@
+# Guion de demostración: java -jar target/rutas-sedes-1.0.0.jar --datos datos-demo < datos/demo-comandos.txt
+importar datos/ejemplo-mapa.txt
+mapa
+ruta A B
+ruta A E
+ruta A ISLA
+ruta B B
+ruta A NOEXISTE
+conexion A D -1
+importar datos/ejemplo-invalido.txt
+exportar datos-demo/exportado.txt
+historial

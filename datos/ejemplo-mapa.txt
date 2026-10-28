@@ -1,0 +1,19 @@
+# Mapa de ejemplo con datos ficticios.
+# Formato: SEDE;id;nombre  |  CONEXION;origen;destino;costo (entero >= 0, dirigida)
+SEDE;A;Sede Administrativa Central
+SEDE;B;Campus Biblioteca
+SEDE;C;Centro Cultural
+SEDE;D;Deportivo Las Palmas
+SEDE;E;Extensión Rural
+SEDE;F;Facultad Norte
+SEDE;ISLA;Observatorio Aislado
+# Criterio de aceptación 1: A->B directo cuesta 4, pero A->C->B cuesta 3
+CONEXION;A;B;4
+CONEXION;A;C;1
+CONEXION;C;B;2
+CONEXION;B;D;5
+CONEXION;C;D;8
+CONEXION;D;E;3
+CONEXION;E;A;6
+CONEXION;B;F;0
+CONEXION;F;E;7
