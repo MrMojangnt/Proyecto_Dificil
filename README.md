@@ -11,6 +11,15 @@ mvn clean test package
 java -jar target/rutas-sedes-1.0.0.jar help
 ```
 
+Al ejecutar el JAR sin argumentos, se abre una sesión interactiva que espera comandos hasta escribir `salir` o `exit`. Los nombres con espacios se pueden escribir entre comillas:
+
+```sh
+java -jar target/rutas-sedes-1.0.0.jar
+rutas> add-site "Sede Central"
+rutas> list
+rutas> salir
+```
+
 El mapa persiste entre ejecuciones. Puede cambiarse el archivo usado por los comandos con `MAP_FILE`:
 
 ```sh

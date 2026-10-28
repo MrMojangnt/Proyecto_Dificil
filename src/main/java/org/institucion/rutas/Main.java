@@ -6,8 +6,13 @@ import org.institucion.rutas.service.RouteResult;
 import org.institucion.rutas.service.RouteService;
 import org.institucion.rutas.service.RouteStatus;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public final class Main {
@@ -17,12 +22,83 @@ public final class Main {
     }
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            runInteractive();
+            return;
+        }
         try {
             run(args);
         } catch (IllegalArgumentException | IOException exception) {
             System.err.println("Error: " + exception.getMessage());
             System.exit(2);
         }
+    }
+
+    private static void runInteractive() {
+        System.out.println("Rutas de sedes. Escriba 'help' para ver comandos y 'salir' para terminar.");
+        try (BufferedReader input = new BufferedReader(
+                new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+            while (true) {
+                System.out.print("rutas> ");
+                System.out.flush();
+                String line = input.readLine();
+                if (line == null) {
+                    System.out.println();
+                    return;
+                }
+                List<String> tokens;
+                try {
+                    tokens = parseCommand(line);
+                } catch (IllegalArgumentException exception) {
+                    System.err.println("Error: " + exception.getMessage());
+                    continue;
+                }
+                if (tokens.isEmpty()) {
+                    continue;
+                }
+                if (tokens.size() == 1 && ("salir".equalsIgnoreCase(tokens.get(0))
+                        || "exit".equalsIgnoreCase(tokens.get(0)))) {
+                    return;
+                }
+                try {
+                    run(tokens.toArray(String[]::new));
+                } catch (IllegalArgumentException | IOException exception) {
+                    System.err.println("Error: " + exception.getMessage());
+                }
+            }
+        } catch (IOException exception) {
+            System.err.println("Error leyendo la entrada: " + exception.getMessage());
+        }
+    }
+
+    private static List<String> parseCommand(String line) {
+        List<String> tokens = new ArrayList<>();
+        StringBuilder token = new StringBuilder();
+        boolean quoted = false;
+        boolean tokenStarted = false;
+        for (int index = 0; index < line.length(); index++) {
+            char character = line.charAt(index);
+            if (character == '"') {
+                quoted = !quoted;
+                tokenStarted = true;
+            } else if (Character.isWhitespace(character) && !quoted) {
+                if (tokenStarted) {
+                    tokens.add(token.toString());
+                    token.setLength(0);
+                    tokenStarted = false;
+                }
+            } else {
+                token.append(character);
+                tokenStarted = true;
+            }
+        }
+        if (quoted) {
+            throw new IllegalArgumentException("Hay comillas sin cerrar.");
+        }
+        if (tokenStarted) {
+            tokens.add(token.toString());
+        }
+        return tokens;
     }
 
     private static void run(String[] args) throws IOException {
